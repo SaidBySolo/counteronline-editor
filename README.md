@@ -84,7 +84,7 @@
 #### 예시
 
 ```md
-/title;Content;
+/category;Content;
 ```
 
 #### 반환값
