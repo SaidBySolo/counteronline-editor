@@ -1,5 +1,5 @@
 import React from "react"
-import { Textarea, Button, useClipboard } from "@chakra-ui/react"
+import { Textarea, Button, useClipboard, Alert, AlertTitle, AlertIcon } from "@chakra-ui/react"
 import ReactDOMServer from 'react-dom/server'
 import Renderer from "./Renderer"
 
@@ -36,6 +36,7 @@ function format(node, level) {
 
 const Page = () => {
     let [value, setValue] = React.useState("")
+    let m = false
     const { hasCopied, onCopy } = useClipboard(ReactDOMServer.renderToStaticMarkup(<Renderer value={value}/>).replace("<div>","").replace("</div>",""))
 
     let handleInputChange = (e) => {
@@ -43,8 +44,17 @@ const Page = () => {
       setValue(inputValue)
     }
 
+    if (value.includes("/metadata")){
+      m = true
+    }
+
     return (
       <>
+        {m ? null : <Alert status="error">
+          <AlertIcon />
+          <AlertTitle mr={2}>Metadata 속성이없습니다!</AlertTitle>
+        </Alert>}
+
         <Textarea
           value={value} 
           onChange={handleInputChange}
