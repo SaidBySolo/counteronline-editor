@@ -18485,23 +18485,23 @@ var parser = (value) => {
   });
   result.push(...tableElements);
   result.push(`
-    <p>&nbsp;</p>
+<p>&nbsp;</p>
 
-    <p>&nbsp;</p>
-    
-    <p>&nbsp;</p>
-    
-    <p>&nbsp;</p>
-    
-    <p>&nbsp;</p>
-    
-    <p>&nbsp;</p>
-    
-    <p>&nbsp;</p>
-    
-    <p style="text-align: center;"><span style="font-size:16px;"><strong>언제나 CounterOnline을 이용해 주셔서 감사합니다.</strong></span></p>
-    
-    <p style="text-align: center;"><strong><span style="font-size:16px;">더 쾌적한 게임 환경과&nbsp;좋은 콘텐츠로 보답하겠습니다.</span></strong></p>
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p style="text-align: center;"><span style="font-size:16px;"><strong>언제나 CounterOnline을 이용해 주셔서 감사합니다.</strong></span></p>
+
+<p style="text-align: center;"><strong><span style="font-size:16px;">더 쾌적한 게임 환경과&nbsp;좋은 콘텐츠로 보답하겠습니다.</span></strong></p>
     `);
   return result;
 };
