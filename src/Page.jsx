@@ -37,7 +37,7 @@ function format(node, level) {
 const Page = () => {
     let [value, setValue] = React.useState("")
     let m = false
-    const { hasCopied, onCopy } = useClipboard(ReactDOMServer.renderToStaticMarkup(<Renderer value={value}/>).replace("<div>","").replace("</div>",""))
+    const { hasCopied, onCopy } = useClipboard(process(ReactDOMServer.renderToStaticMarkup(<Renderer value={value}/>).replace("<div>","").replace("</div>","")))
 
     let handleInputChange = (e) => {
       let inputValue = e.target.value
