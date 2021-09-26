@@ -11368,8 +11368,8 @@ function copy(text, options) {
           debug && console.warn("unable to use e.clipboardData");
           debug && console.warn("trying IE specific stuff");
           window.clipboardData.clearData();
-          var format2 = clipboardToIE11Formatting[options.format] || clipboardToIE11Formatting["default"];
-          window.clipboardData.setData(format2, text);
+          var format3 = clipboardToIE11Formatting[options.format] || clipboardToIE11Formatting["default"];
+          window.clipboardData.setData(format3, text);
         } else {
           e2.clipboardData.clearData();
           e2.clipboardData.setData(options.format, text);
@@ -12329,7 +12329,7 @@ function inputToRGB(color2) {
   var v2 = null;
   var l2 = null;
   var ok2 = false;
-  var format2 = false;
+  var format3 = false;
   if (typeof color2 === "string") {
     color2 = stringInputToObject(color2);
   }
@@ -12337,19 +12337,19 @@ function inputToRGB(color2) {
     if (isValidCSSUnit(color2.r) && isValidCSSUnit(color2.g) && isValidCSSUnit(color2.b)) {
       rgb = rgbToRgb(color2.r, color2.g, color2.b);
       ok2 = true;
-      format2 = String(color2.r).substr(-1) === "%" ? "prgb" : "rgb";
+      format3 = String(color2.r).substr(-1) === "%" ? "prgb" : "rgb";
     } else if (isValidCSSUnit(color2.h) && isValidCSSUnit(color2.s) && isValidCSSUnit(color2.v)) {
       s = convertToPercentage(color2.s);
       v2 = convertToPercentage(color2.v);
       rgb = hsvToRgb(color2.h, s, v2);
       ok2 = true;
-      format2 = "hsv";
+      format3 = "hsv";
     } else if (isValidCSSUnit(color2.h) && isValidCSSUnit(color2.s) && isValidCSSUnit(color2.l)) {
       s = convertToPercentage(color2.s);
       l2 = convertToPercentage(color2.l);
       rgb = hslToRgb(color2.h, s, l2);
       ok2 = true;
-      format2 = "hsl";
+      format3 = "hsl";
     }
     if (Object.prototype.hasOwnProperty.call(color2, "a")) {
       a2 = color2.a;
@@ -12358,7 +12358,7 @@ function inputToRGB(color2) {
   a2 = boundAlpha(a2);
   return {
     ok: ok2,
-    format: color2.format || format2,
+    format: color2.format || format3,
     r: Math.min(255, Math.max(rgb.r, 0)),
     g: Math.min(255, Math.max(rgb.g, 0)),
     b: Math.min(255, Math.max(rgb.b, 0)),
@@ -12634,43 +12634,43 @@ var TinyColor = function() {
     }
     return false;
   };
-  TinyColor2.prototype.toString = function(format2) {
-    var formatSet = Boolean(format2);
-    format2 = format2 !== null && format2 !== void 0 ? format2 : this.format;
+  TinyColor2.prototype.toString = function(format3) {
+    var formatSet = Boolean(format3);
+    format3 = format3 !== null && format3 !== void 0 ? format3 : this.format;
     var formattedString = false;
     var hasAlpha = this.a < 1 && this.a >= 0;
-    var needsAlphaFormat = !formatSet && hasAlpha && (format2.startsWith("hex") || format2 === "name");
+    var needsAlphaFormat = !formatSet && hasAlpha && (format3.startsWith("hex") || format3 === "name");
     if (needsAlphaFormat) {
-      if (format2 === "name" && this.a === 0) {
+      if (format3 === "name" && this.a === 0) {
         return this.toName();
       }
       return this.toRgbString();
     }
-    if (format2 === "rgb") {
+    if (format3 === "rgb") {
       formattedString = this.toRgbString();
     }
-    if (format2 === "prgb") {
+    if (format3 === "prgb") {
       formattedString = this.toPercentageRgbString();
     }
-    if (format2 === "hex" || format2 === "hex6") {
+    if (format3 === "hex" || format3 === "hex6") {
       formattedString = this.toHexString();
     }
-    if (format2 === "hex3") {
+    if (format3 === "hex3") {
       formattedString = this.toHexString(true);
     }
-    if (format2 === "hex4") {
+    if (format3 === "hex4") {
       formattedString = this.toHex8String(true);
     }
-    if (format2 === "hex8") {
+    if (format3 === "hex8") {
       formattedString = this.toHex8String();
     }
-    if (format2 === "name") {
+    if (format3 === "name") {
       formattedString = this.toName();
     }
-    if (format2 === "hsl") {
+    if (format3 === "hsl") {
       formattedString = this.toHslString();
     }
-    if (format2 === "hsv") {
+    if (format3 === "hsv") {
       formattedString = this.toHsvString();
     }
     return formattedString || this.toHexString();
@@ -18516,12 +18516,30 @@ var Renderer = ({value}) => {
 var Renderer_default = Renderer;
 
 // build/dist/Page.js
+function process(str) {
+  var div = document.createElement("div");
+  div.innerHTML = str.trim();
+  return format2(div, 0).innerHTML;
+}
+function format2(node, level) {
+  var indentBefore = new Array(level++ + 1).join("  "), indentAfter = new Array(level - 1).join("  "), textNode;
+  for (var i2 = 0; i2 < node.children.length; i2++) {
+    textNode = document.createTextNode("\n" + indentBefore);
+    node.insertBefore(textNode, node.children[i2]);
+    format2(node.children[i2], level);
+    if (node.lastElementChild == node.children[i2]) {
+      textNode = document.createTextNode("\n" + indentAfter);
+      node.appendChild(textNode);
+    }
+  }
+  return node;
+}
 var Page = () => {
   let [value, setValue] = react.useState("");
   let m2 = false;
-  const {hasCopied, onCopy} = useClipboard(server_default.renderToStaticMarkup(/* @__PURE__ */ react.createElement(Renderer_default, {
+  const {hasCopied, onCopy} = useClipboard(process(server_default.renderToStaticMarkup(/* @__PURE__ */ react.createElement(Renderer_default, {
     value
-  })).replace("<div>", "").replace("</div>", ""));
+  })).replace("<div>", "").replace("</div>", "")));
   let handleInputChange = (e2) => {
     let inputValue = e2.target.value;
     setValue(inputValue);
