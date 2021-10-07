@@ -14,12 +14,16 @@ const MakeMetaData = ({data}) => {
 
 
 const MakeMainCategory = ({data}) => {
+    let version = data.match(/setVersion=\"(.+?)\"/m)
+    version = version ? version[1] : ""
+
+    const value = data.replace(/setVersion=\"(.+?)\"/m, '')
     return (
         <>
             <p>
                 <span style={{fontSize: "28px"}}>
                     <strong>
-                        &nbsp; {data}
+                        &nbsp; {`${value} ${version} 업데이트`}
                     </strong>
                 </span>
             </p>
