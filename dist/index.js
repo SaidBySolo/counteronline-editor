@@ -18373,9 +18373,12 @@ var MakeMetaData = ({data}) => {
   }), /* @__PURE__ */ react.createElement("p", null, " "));
 };
 var MakeMainCategory = ({data}) => {
+  let version3 = data.match(/setVersion=\"(.+?)\"/m);
+  version3 = version3 ? version3[1] : "";
+  const value = data.replace(/setVersion=\"(.+?)\"/m, "");
   return /* @__PURE__ */ react.createElement(react.Fragment, null, /* @__PURE__ */ react.createElement("p", null, /* @__PURE__ */ react.createElement("span", {
     style: {fontSize: "28px"}
-  }, /* @__PURE__ */ react.createElement("strong", null, "  ", data))), /* @__PURE__ */ react.createElement("h5", null, /* @__PURE__ */ react.createElement("span", {
+  }, /* @__PURE__ */ react.createElement("strong", null, "  ", `${value} ${version3} 업데이트`))), /* @__PURE__ */ react.createElement("h5", null, /* @__PURE__ */ react.createElement("span", {
     style: {fontSize: "20px", color: "#999999"}
   }, /* @__PURE__ */ react.createElement("strong", null, /* @__PURE__ */ react.createElement("strike", null, "                                                                                           ")))));
 };
