@@ -18422,9 +18422,78 @@ var MakeTableContent = ({data}) => {
     style: {fontSize: "15px"}
   }));
 };
+var MakeFinal = () => {
+  return /* @__PURE__ */ react.createElement(react.Fragment, null, /* @__PURE__ */ react.createElement("p", null, " "), /* @__PURE__ */ react.createElement("p", null, " "), /* @__PURE__ */ react.createElement("p", null, " "), /* @__PURE__ */ react.createElement("p", null, " "), /* @__PURE__ */ react.createElement("p", null, " "), /* @__PURE__ */ react.createElement("p", null, " "), /* @__PURE__ */ react.createElement("p", null, " "), /* @__PURE__ */ react.createElement("p", {
+    style: {textAlign: "center"}
+  }, /* @__PURE__ */ react.createElement("span", {
+    style: {fontSize: "16px"}
+  }, /* @__PURE__ */ react.createElement("strong", null, "언제나 CounterOnline을 이용해 주셔서 감사합니다."))), /* @__PURE__ */ react.createElement("p", {
+    style: {textAlign: "center"}
+  }, /* @__PURE__ */ react.createElement("strong", null, /* @__PURE__ */ react.createElement("span", {
+    style: {fontSize: "16px"}
+  }, "더 쾌적한 게임 환경과 좋은 콘텐츠로 보답하겠습니다."))));
+};
 
 // build/dist/Parser.js
+var MetadataParser = class {
+  constructor() {
+    this.size = 0;
+    this.webhookData = [];
+    this.processData = {};
+    this.category = "";
+  }
+  reset() {
+    this.size = 0;
+    this.category = "";
+    this.processData = {};
+  }
+  setTitle(name, version3) {
+    if (this.processData?.name) {
+      this.setCategory("");
+      this.webhookData.push(this.processData);
+      this.reset();
+    }
+    this.processData = {
+      name,
+      content: []
+    };
+    if (version3.length != 0) {
+      this.processData.version = version3;
+    }
+  }
+  setCategory(category) {
+    if (this.category.length != 0 && this.processData?.content) {
+      this.processData.content.push({name: this.category, size: this.size});
+      this.size = 0;
+      this.category = "";
+    }
+    this.category = category;
+  }
+  setContent() {
+    this.size += 1;
+  }
+  setFinal() {
+    this.setCategory("");
+    this.webhookData.push(this.processData);
+  }
+};
+var matchedPush = (resultArray, matched, jsxElement, name, metadataParser) => {
+  if (matched) {
+    const markUp = server_default.renderToStaticMarkup(jsxElement({data: matched[1]}));
+    if (name === "MakeMainCategory") {
+      let version3 = matched[1].match(/setVersion=\"(.+?)\"/m);
+      version3 = version3 ? version3[1] : "";
+      metadataParser.setTitle(matched[1].replace(/ setVersion=\"(.+?)\"/m, ""), version3);
+    } else if (name === "MakeSubCategory") {
+      metadataParser.setCategory(matched[1]);
+    } else if (name === "MakeDetailInfo") {
+      metadataParser.setContent();
+    }
+    resultArray.push({name, markUp});
+  }
+};
 var parser = (value) => {
+  const metadataParser = new MetadataParser();
   const lines = value.split("\n");
   const result = [];
   let isTable = false;
@@ -18434,78 +18503,42 @@ var parser = (value) => {
       result.push("<p>&nbsp;</p>");
     } else if (line.startsWith("/metadata")) {
       const matched = line.match(/\/metadata;(.+?);/m);
-      if (matched) {
-        result.push(server_default.renderToStaticMarkup(/* @__PURE__ */ react.createElement(MakeMetaData, {
-          data: matched[1]
-        })));
-      }
+      matchedPush(result, matched, MakeMetaData, "MakeMetaData", metadataParser);
     } else if (line.startsWith("/title")) {
       const matched = line.match(/\/title;(.+?);/m);
-      if (matched) {
-        result.push(server_default.renderToStaticMarkup(/* @__PURE__ */ react.createElement(MakeMainCategory, {
-          data: matched[1]
-        })));
-      }
+      matchedPush(result, matched, MakeMainCategory, "MakeMainCategory", metadataParser);
     } else if (line.startsWith("/category")) {
       const matched = line.match(/\/category;(.+?);/m);
-      if (matched) {
-        result.push(server_default.renderToStaticMarkup(/* @__PURE__ */ react.createElement(MakeSubCategory, {
-          data: matched[1]
-        })));
-      }
+      matchedPush(result, matched, MakeSubCategory, "MakeSubCategory", metadataParser);
     } else if (line.startsWith("/content")) {
       const matched = line.match(/\/content;(.+?);/m);
-      if (matched) {
-        result.push(server_default.renderToStaticMarkup(/* @__PURE__ */ react.createElement(MakeDetailInfo, {
-          data: matched[1]
-        })));
-      }
+      matchedPush(result, matched, MakeDetailInfo, "MakeDetailInfo", metadataParser);
     } else if (line.startsWith("/img")) {
       const matched = line.match(/\/img;(.+?);/m);
-      if (matched) {
-        result.push(server_default.renderToStaticMarkup(/* @__PURE__ */ react.createElement(MakeImage, {
-          data: matched[1]
-        })));
-      }
+      matchedPush(result, matched, MakeImage, "MakeImage", metadataParser);
     } else if (line.startsWith("/blockcontent")) {
       const matched = line.match(/\/blockcontent;(.+?);/m);
-      if (matched) {
-        result.push(server_default.renderToStaticMarkup(/* @__PURE__ */ react.createElement(MakeBlockQuote, {
-          data: matched[1]
-        })));
-      }
+      matchedPush(result, matched, MakeBlockQuote, "MakeBlockQuote", metadataParser);
+    } else if (line.startsWith("/final")) {
+      metadataParser.setFinal();
+      result.push(server_default.renderToStaticMarkup(/* @__PURE__ */ react.createElement(MakeFinal, null)));
+      result.unshift(server_default.renderToStaticMarkup(/* @__PURE__ */ react.createElement("meta", {
+        property: "co:webhook",
+        content: JSON.stringify(metadataParser.webhookData)
+      })));
     } else if (line.startsWith("/table")) {
       isTable = true;
       tableElements.push(`<ul>`);
     } else if (line.startsWith("/end")) {
       isTable = false;
       tableElements.push(`</ul>`);
+      result.push(...tableElements);
     } else if (isTable) {
       tableElements.push(server_default.renderToStaticMarkup(/* @__PURE__ */ react.createElement(MakeTableContent, {
         data: line.replaceAll("->", "&rarr;").replace(/~~(.+?)~~/m, "<s>$1</s>")
       })));
     }
   });
-  result.push(...tableElements);
-  result.push(`
-<p>&nbsp;</p>
-
-<p>&nbsp;</p>
-
-<p>&nbsp;</p>
-
-<p>&nbsp;</p>
-
-<p>&nbsp;</p>
-
-<p>&nbsp;</p>
-
-<p>&nbsp;</p>
-
-<p style="text-align: center;"><span style="font-size:16px;"><strong>언제나 CounterOnline을 이용해 주셔서 감사합니다.</strong></span></p>
-
-<p style="text-align: center;"><strong><span style="font-size:16px;">더 쾌적한 게임 환경과&nbsp;좋은 콘텐츠로 보답하겠습니다.</span></strong></p>
-    `);
   return result;
 };
 
@@ -18513,7 +18546,7 @@ var parser = (value) => {
 var Renderer = ({value}) => {
   const p3 = parser(value);
   return /* @__PURE__ */ react.createElement("div", {
-    dangerouslySetInnerHTML: {__html: p3.join("\n")}
+    dangerouslySetInnerHTML: {__html: p3.map((element) => `${element.markUp ? element.markUp : element}`).join("\n")}
   });
 };
 var Renderer_default = Renderer;
