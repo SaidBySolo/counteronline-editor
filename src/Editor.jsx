@@ -102,6 +102,30 @@ const MakeTableContent = ({data}) => {
         // .replace(/\/detailinfo\((.+?),\)/g, ReactDOMServer.renderToString(<MakeDetailInfo data={RegExp.$1}/>))
         // .replace(/\/table(([^\n]*\n+)+)\/end/gm, ReactDOMServer.renderToString(<MakeTable data={RegExp.$1}/>))
 
+const MakeFinal = () => {
+    return (
+        <>
+            <p>&nbsp;</p>
+
+            <p>&nbsp;</p>
+
+            <p>&nbsp;</p>
+
+            <p>&nbsp;</p>
+
+            <p>&nbsp;</p>
+
+            <p>&nbsp;</p>
+
+            <p>&nbsp;</p>
+
+            <p style={{textAlign: "center"}}><span style={{fontSize: "16px"}}><strong>언제나 CounterOnline을 이용해 주셔서 감사합니다.</strong></span></p>
+
+            <p style={{textAlign: "center"}}><strong><span style={{fontSize: "16px"}}>더 쾌적한 게임 환경과&nbsp;좋은 콘텐츠로 보답하겠습니다.</span></strong></p>
+        </>
+    )
+}
+
 export  {
     MakeMetaData,
     MakeMainCategory,
@@ -109,5 +133,6 @@ export  {
     MakeDetailInfo,
     MakeImage,
     MakeBlockQuote,
-    MakeTableContent
+    MakeTableContent,
+    MakeFinal
 }

@@ -193,3 +193,35 @@ Src 항목에는 이미지 링크를 입력해야합니다.
 <li><span style="font-size:15px">크리티컬 대미지 <s>2</s> &rarr; 1</span></li>
 </ul>
 ```
+
+### Metadata
+
+글을 마무리 짓습니다.
+
+#### 구문
+
+```md
+/final
+```
+
+#### 반환값
+
+```html
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p style=text-align:center;><span style=font-size:16px;><strong>언제나 CounterOnline을 이용해 주셔서 감사합니다.</strong></span></p>
+
+<p style=text-align:center;><strong><span style=font-size:16px;>더 쾌적한 게임 환경과&nbsp;좋은 콘텐츠로 보답하겠습니다.</span></strong></p>
+```
