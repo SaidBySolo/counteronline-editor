@@ -11,6 +11,13 @@ class MetadataParser{
         this.category = ""
     }
 
+    addMetadata(srl){
+        this.webhookData.push({
+            process: 0,
+            srl: srl
+        })
+    }
+
     reset(){
         this.size = 0
         this.category = ""
@@ -25,6 +32,7 @@ class MetadataParser{
         }
 
         this.processData = {
+            process: 1,
             name: name,
             content: []
         }
@@ -57,7 +65,10 @@ class MetadataParser{
 const matchedPush = (resultArray, matched, jsxElement, name, metadataParser) => {
     if (matched){
         const markUp = ReactDOMServer.renderToStaticMarkup(jsxElement({data:matched[1]}))
-        if (name === "MakeMainCategory"){
+        if (name === "MakeMetaData"){
+            metadataParser.addMetadata(matched[1])
+        }
+        else if (name === "MakeMainCategory"){
             let version = matched[1].match(/setVersion=\"(.+?)\"/m)
             version = version ? version[1] : ""        
             metadataParser.setTitle(matched[1].replace(/ setVersion=\"(.+?)\"/m, ''), version)
