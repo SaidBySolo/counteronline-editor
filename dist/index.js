@@ -18442,6 +18442,12 @@ var MetadataParser = class {
     this.processData = {};
     this.category = "";
   }
+  addMetadata(srl) {
+    this.webhookData.push({
+      process: 0,
+      srl
+    });
+  }
   reset() {
     this.size = 0;
     this.category = "";
@@ -18454,6 +18460,7 @@ var MetadataParser = class {
       this.reset();
     }
     this.processData = {
+      process: 1,
       name,
       content: []
     };
@@ -18480,7 +18487,9 @@ var MetadataParser = class {
 var matchedPush = (resultArray, matched, jsxElement, name, metadataParser) => {
   if (matched) {
     const markUp = server_default.renderToStaticMarkup(jsxElement({data: matched[1]}));
-    if (name === "MakeMainCategory") {
+    if (name === "MakeMetaData") {
+      metadataParser.addMetadata(matched[1]);
+    } else if (name === "MakeMainCategory") {
       let version3 = matched[1].match(/setVersion=\"(.+?)\"/m);
       version3 = version3 ? version3[1] : "";
       metadataParser.setTitle(matched[1].replace(/ setVersion=\"(.+?)\"/m, ""), version3);
