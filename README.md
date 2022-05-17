@@ -1,232 +1,46 @@
-# CounterOnline Patch Noter
+# Getting Started with Create React App
 
-## 설명
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-이 프로젝트는 카운터온라인에서 작성되는 패치노트를 쉽고 편하게 작성하기 위해 시작되었습니다.
+## Available Scripts
 
-아래 항목에 구문들이 설명되어있으니 한번읽어보시길 바랍니다.
+In the project directory, you can run:
 
-## 문법
+### `yarn start`
 
-이 항목에서는 문법을 다룹니다.
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-모든 문법은 ``/``로 시작하며
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
 
-글을 시작하거나 마무리할때는 ``;``를 사용합니다.
+### `yarn test`
 
-모든 구문은 소문자입니다.
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### Metadata
+### `yarn build`
 
-메타 데이터 구역은 항상 첫 번째 줄에 들어가야 합니다.
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-날짜의 예시: 오늘이 21년 9월 23일인 경우 20210923
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-패치번호의 예시: 오늘 하루 동안의 패치 번호를 뜻합니다. 패치의 분야 (게임 서버, 밸런스 패치, etc...)
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-상관없이 첫 번째 패치일 경우 0
+### `yarn eject`
 
-두 번째 패치일 경우 1... 순으로 기록합니다.
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-오늘이 21년 9월 23일이며, 세 번째 패치 게시글인 경우 #20210923.2입니다.
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-#### 구문
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-```md
-/metadata;#20210923.2;
-```
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-#### 반환값
+## Learn More
 
-```md
-<meta property="og:description" content="이 게시글은 CounterOnline changelog #20210923.2 패치에 관한 내용을 다루고 있습니다.">
-```
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-### lb
-
-줄바꿈 입니다.
-
-#### 예시
-
-```md
-/lb
-```
-
-#### 반환값
-
-```md
-<p>&nbsp;</p>
-```
-
-### Title
-
-이 구역은 대분류로 취급받는 것(무기, 좀비, 데스매치, 공통, 밸런스 등...)으로 작성합니다.
-
-예시: 좀비 v5.0 업데이트, 버전이 존재하지 않는 경우 좀비 업데이트 형식으로 작성
-
-#### 예시
-
-```md
-/title;좀비;
-```
-
-버전을 설정해야하는 경우
-```md
-/title;좀비 setVersion="4.17.20";
-```
-
-#### 반환값
-
-```md
-<p><span style="font-size:28px;"><strong>&nbsp; 좀비 업데이트</strong></span></p>
-<h5><span style="font-size:20px; color:#999999;"><strong><strike>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </strike></strong></span></h5>
-```
-
-### Category
-
-이 구역은 소분류로 취급받는 것(Content, Balance, Bug Patch, Etc 등...)으로 작성합니다.
-
-#### 예시
-
-```md
-/category;Content;
-```
-
-#### 반환값
-
-```md
-<h5 style="font-weight:800; font-size:22px;">&nbsp; &nbsp; Content</h5>
-```
-
-### Content
-
-이 구역은 패치의 세부 사항을 작성합니다.
-
-이 구역에서는 색 및 타입을 지정해야합니다.
-
-타입을 지정하는방법은 대표적으로 세 가지가 있는데
-
-무언가가 제거되는 경우 ``minus``
-
-무언가가 새롭게 추가되는 경우 ``plus``
-
-무언가가 변경된 경우 ``check``를 사용합니다.
-
-색을 지정하는 방법은
-
-Hex로 컬러코드를 입력하거나 단색을 입력해주시면 됩니다.
-
-아래 예시를 참고해주세요.
-
-#### 예시
-
-```md
-/content;알 수 없는 출처의 "G큐브" 맵이 제거되었습니다. setType="minus" setColor="black";
-```
-
-#### 반환값
-
-```md
-<p><span style="font-size:16px;color:black"><span class="fas fa-minus"> </span> 알 수 없는 출처의 &quot;G큐브&quot; 맵이 제거되었습니다.   </span></p>
-```
-
-### 추가정보
-
-이 구역은 소분류로 취급받는 것(Content, Balance, Bug Patch, Etc 등...)으로 작성합니다.
-
-#### Img
-
-이미지를 삽입합니다.
-
-Alt 항목 에는 사진 설명을 입력해야하고
-
-Src 항목에는 이미지 링크를 입력해야합니다.
-
-##### 예시
-
-```md
-/img;setAlt="그림설명" setSrc="https://i.imgur.com/mGhbuSC.png";
-```
-
-###### 반환값
-
-```md
-<p><img alt="그림설명" src="https://i.imgur.com/mGhbuSC.png" style="margin-top:3px;border-radius:15px" width="70%"/></p>
-```
-
-#### Blockcontent
-
-인용 입니다.
-
-##### 구문
-
-```md
-/blockcontent;내용;
-```
-
-###### 반환값
-
-```md
-<blockquote><p><span style="font-size:16px">내용</span></p></blockquote>
-```
-
-#### Table/End
-
-표 입니다.
-
-표를 시작할때는 ``table``
-마칠때는 ``end``를 사용합니다.
-
-취소선이 필요한경우 마크다운양식에 따릅니다. 예: ``~~내용~~``
-
-화살표는 ``->``를 입력할경우 자동으로 치환됩니다.
-
-##### 예시
-
-```md
-/table
-크리티컬 확률 ~~40%~~ -> 33%
-크리티컬 대미지 ~~2~~ -> 1
-/end
-```
-
-###### 반환값
-
-```md
-<ul>
-<li><span style="font-size:15px">크리티컬 확률 <s>40%</s> &rarr; 33%</span></li>
-<li><span style="font-size:15px">크리티컬 대미지 <s>2</s> &rarr; 1</span></li>
-</ul>
-```
-
-### Final
-
-글을 마무리 짓습니다.
-
-#### 구문
-
-```md
-/final
-```
-
-#### 반환값
-
-```html
-<p>&nbsp;</p>
-
-<p>&nbsp;</p>
-
-<p>&nbsp;</p>
-
-<p>&nbsp;</p>
-
-<p>&nbsp;</p>
-
-<p>&nbsp;</p>
-
-<p>&nbsp;</p>
-
-<p style=text-align:center;><span style=font-size:16px;><strong>언제나 CounterOnline을 이용해 주셔서 감사합니다.</strong></span></p>
-
-<p style=text-align:center;><strong><span style=font-size:16px;>더 쾌적한 게임 환경과&nbsp;좋은 콘텐츠로 보답하겠습니다.</span></strong></p>
-```
+To learn React, check out the [React documentation](https://reactjs.org/).
