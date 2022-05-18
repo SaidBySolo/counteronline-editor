@@ -1,3 +1,5 @@
+import { WebhookMetadataBuilder } from "./WebhookMetadataBuilder";
+
 // https://stackoverflow.com/a/3890175
 function linkify(inputText: string) {
     //URLs starting with http://, https://, or ftp://
@@ -7,13 +9,18 @@ function linkify(inputText: string) {
 }
 
 export class PatchNoteBuilder {
-    state: (element: JSX.Element) => void
-    constructor(state: React.Dispatch<React.SetStateAction<JSX.Element[]>>) {
-        this.state = (element: JSX.Element) => { state(prevElements => [...prevElements, element]) }
+    addElement: (element: JSX.Element) => void
+    state: React.Dispatch<React.SetStateAction<JSX.Element[]>>
+    webhookMedadataBuilder: WebhookMetadataBuilder;
+    constructor(state: React.Dispatch<React.SetStateAction<JSX.Element[]>>, webhookMedadataBuilder: WebhookMetadataBuilder) {
+        this.state = state
+        this.webhookMedadataBuilder = webhookMedadataBuilder
+        this.addElement = (element: JSX.Element) => state(prevElements => [...prevElements, element])
     }
 
     addMetadata(content: string) {
-        this.state(
+        this.webhookMedadataBuilder.addMetadata(content)
+        this.addElement(
             <>
                 <meta property="og:description" content={`이 게시글은 CounterOnline changelog ${content} 패치에 관한 내용을 다루고 있습니다.`} />
                 <p>&nbsp;</p>
@@ -23,11 +30,12 @@ export class PatchNoteBuilder {
     }
 
     addLineBreak() {
-        this.state(<p>&nbsp;</p>)
+        this.addElement(<p>&nbsp;</p>)
     }
 
     addTitle(content: string, version: string) {
-        this.state(
+        this.webhookMedadataBuilder.setTitle(content, version)
+        this.addElement(
             <>
                 <p>
                     <span style={{ fontSize: "28px" }}>
@@ -53,11 +61,13 @@ export class PatchNoteBuilder {
     }
 
     addCategory(content: string) {
-        this.state(<h5 style={{ fontWeight: 800, fontSize: "22px" }}>&nbsp; &nbsp; {content}</h5>)
+        this.webhookMedadataBuilder.setCategory(content)
+        this.addElement(<h5 style={{ fontWeight: 800, fontSize: "22px" }}>&nbsp; &nbsp; {content}</h5>)
     }
 
     addContent(type: string, color: string, content: string) {
-        this.state(
+        this.webhookMedadataBuilder.setContent()
+        this.addElement(
             < p >
                 <span style={{ fontSize: "16px", color: color }} >
                     {/* @ts-ignore*/}
@@ -71,7 +81,7 @@ export class PatchNoteBuilder {
     }
 
     addDescription(content: string) {
-        this.state(
+        this.addElement(
             <p>
                 <span style={{ fontSize: "13px" }}>
                     &nbsp; &nbsp; &nbsp; &nbsp; {linkify(content)}
@@ -81,26 +91,38 @@ export class PatchNoteBuilder {
     }
 
     addImage(alt: string, src: string) {
-        this.state(
+        this.addElement(
             < p >
                 <img alt={alt} src={src} style={{ marginTop: "3px", borderRadius: "15px" }} width="70%" />
             </p >
         )
     }
 
+    addTable(content: string[]) {
+        console.log(content)
+        this.addElement(
+            <ul>
+                {content.map((content) => <li><span style={{ fontSize: "15px" }}>{content.replaceAll("->", '&rarr;').replace(/~~(.+?)~~/m, '<s>$1</s>')}</span></li>)}
+            </ul>
+
+        )
+    }
+
     addBlockcontent(content: string) {
-        this.state(
-            < blockquote >
+        this.addElement(
+            <blockquote>
                 <p>
                     <span style={{ fontSize: "16px" }}>
                         {content}
                     </span>
                 </p>
-            </blockquote >
+            </blockquote>
         )
     }
-    finalize() {
-        this.state(
+    addFinal() {
+        this.webhookMedadataBuilder.setFinal()
+        this.state(elements => [<meta property="co:webhook" content={JSON.stringify(this.webhookMedadataBuilder.webhookData)} />, ...elements])
+        this.addElement(
             <>
                 <p>&nbsp;</p>
 

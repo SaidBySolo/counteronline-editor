@@ -4,7 +4,7 @@ import { PatchNoteBuilder } from './PatchNoteBuilder';
 
 export const MainAccordion = ({ builder }: { builder: PatchNoteBuilder }) => {
     return (
-        <Accordion allowToggle width="500px">
+        <Accordion allowToggle width="500px" marginRight="50px">
             <MetadataAccordion builder={builder} />
             <LineBreakAccordion builder={builder} />
             <TitleAccordion builder={builder} />
@@ -13,6 +13,8 @@ export const MainAccordion = ({ builder }: { builder: PatchNoteBuilder }) => {
             <DescriptionAccordion builder={builder} />
             <ImageAccordion builder={builder} />
             <BlockcontentAccordion builder={builder} />
+            <TableAccordion builder={builder} />
+            <FinalAccordion builder={builder} />
         </Accordion>
     )
 }
@@ -196,6 +198,49 @@ const BlockcontentAccordion = ({ builder }: { builder: PatchNoteBuilder }) => {
                 onChange={handleContentChange}
                 placeholder='content' />
             <Button onClick={() => builder.addBlockcontent(contentValue)}>
+                Add
+            </Button>
+        </AccordionItemBase>
+    )
+}
+
+const Item = ({ inputsRef, refKey }: { inputsRef: React.MutableRefObject<Array<HTMLInputElement | null>>, refKey: number }) => {
+    const [contentValue, setContentValue] = React.useState('')
+    const handleContentChange = (event: React.ChangeEvent<HTMLInputElement>) => { setContentValue(event.target.value) }
+    return (
+        <Input
+            ref={(element) => inputsRef.current[refKey] = element}
+            marginBottom="20px"
+            value={contentValue}
+            onChange={handleContentChange}
+            placeholder='content'
+        />
+    )
+}
+
+const TableAccordion = ({ builder }: { builder: PatchNoteBuilder }) => {
+    const [itemElements, setItemElements] = React.useState<JSX.Element[]>([])
+    const [key, setKey] = React.useState<number>(0)
+    const inputs = React.useRef<HTMLInputElement[]>([]);
+    return (
+        <AccordionItemBase name="Add Table">
+            {itemElements}
+            <Button marginRight="100px" onClick={() => builder.addTable(inputs.current.map(input => input.value))}>
+                Add
+            </Button>
+            <Button onClick={() => setItemElements(itemElements => {
+                setKey(key + 1)
+                return [...itemElements, <Item key={key} inputsRef={inputs} refKey={key} />]
+            })}>+</Button>
+            <Button onClick={() => setItemElements(elements => elements.slice(0, -1))}>-</Button>
+        </AccordionItemBase>
+    )
+}
+
+const FinalAccordion = ({ builder }: { builder: PatchNoteBuilder }) => {
+    return (
+        <AccordionItemBase name="Add Final">
+            <Button onClick={() => builder.addFinal()}>
                 Add
             </Button>
         </AccordionItemBase>
