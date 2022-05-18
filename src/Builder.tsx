@@ -4,7 +4,7 @@ import { PatchNoteBuilder } from './PatchNoteBuilder';
 
 export const MainAccordion = ({ builder }: { builder: PatchNoteBuilder }) => {
     return (
-        <Accordion allowToggle width="500px" marginRight="50px">
+        <Accordion allowToggle width="500px">
             <MetadataAccordion builder={builder} />
             <LineBreakAccordion builder={builder} />
             <TitleAccordion builder={builder} />
