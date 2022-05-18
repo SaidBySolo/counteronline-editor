@@ -3,7 +3,7 @@ import { WebhookMetadataBuilder } from "./WebhookMetadataBuilder";
 // https://stackoverflow.com/a/3890175
 function linkify(inputText: string) {
     //URLs starting with http://, https://, or ftp://
-    const replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+    const replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#%?=~_|!:,.;/]*[-A-Z0-9+&@#%=~_|/])/gim;
     const execed = replacePattern1.exec(inputText)
     return execed ? <a href={execed[0]}>{execed[0]}</a> : inputText
 }
