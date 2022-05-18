@@ -53,13 +53,13 @@ function App() {
         <MainAccordion builder={builder} />
         <Flex justifyContent="space-between" margin="25px">
           <Button onClick={onCopy}>
-            {hasCopied ? "Copied" : "Copy"}
+            {hasCopied ? "복사됨" : "복사"}
           </Button>
           <Button onClick={() => setElements(elements => elements.slice(0, -1))}>
-            Revert
+            되돌리기
           </Button>
           <Button onClick={() => setElements([])}>
-            Clear
+            전체 지우기
           </Button>
         </Flex>
       </Flex>
