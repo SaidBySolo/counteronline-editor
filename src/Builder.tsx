@@ -1,4 +1,4 @@
-import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Button, Input, Textarea } from '@chakra-ui/react';
+import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Button, Input } from '@chakra-ui/react';
 import * as React from 'react';
 import { PatchNoteBuilder } from './PatchNoteBuilder';
 
