@@ -40,7 +40,7 @@ const AccordionItemBase = ({ name, children }: { name: string, children: React.R
 }
 const LineBreakAccordion = ({ builder }: { builder: PatchNoteBuilder }) => {
     return (
-        <AccordionItemBase name="Add LineBreak">
+        <AccordionItemBase name="줄바꿈 추가">
             <Button onClick={() => builder.addLineBreak()}>
                 Add
             </Button>
@@ -54,7 +54,7 @@ const MetadataAccordion = ({ builder }: { builder: PatchNoteBuilder }) => {
     const handleContentChange = (event: React.ChangeEvent<HTMLInputElement>) => setContentValue(event.target.value)
 
     return (
-        <AccordionItemBase name="Add Metadata">
+        <AccordionItemBase name="메타데이터 추가 (제일 먼저 추가해야함)">
             <Input
                 value={contentValue}
                 onChange={handleContentChange}
@@ -73,7 +73,7 @@ const TitleAccordion = ({ builder }: { builder: PatchNoteBuilder }) => {
     const [versionValue, setVersionValue] = React.useState('')
     const handleVersionChange = (event: React.ChangeEvent<HTMLInputElement>) => setVersionValue(event.target.value)
     return (
-        <AccordionItemBase name="Add Title">
+        <AccordionItemBase name="제목 추가">
             <Input
                 placeholder='content'
                 value={contentValue}
@@ -96,7 +96,7 @@ const CategoryAccordion = ({ builder }: { builder: PatchNoteBuilder }) => {
     const [contentValue, setContentValue] = React.useState('')
     const handleContentChange = (event: React.ChangeEvent<HTMLInputElement>) => setContentValue(event.target.value)
     return (
-        <AccordionItemBase name="Add Category">
+        <AccordionItemBase name="카테고리 추가">
             <Input
                 placeholder='content'
                 value={contentValue}
@@ -119,7 +119,7 @@ const ContentAccordion = ({ builder }: { builder: PatchNoteBuilder }) => {
     const [contentValue, setContentValue] = React.useState('')
     const handleContentChange = (event: React.ChangeEvent<HTMLInputElement>) => setContentValue(event.target.value)
     return (
-        <AccordionItemBase name="Add Content">
+        <AccordionItemBase name="내용 추가">
             <Input
                 placeholder='type: plus | minus | check'
                 value={typeValue}
@@ -149,7 +149,7 @@ const DescriptionAccordion = ({ builder }: { builder: PatchNoteBuilder }) => {
     const handleContentChange = (event: React.ChangeEvent<HTMLInputElement>) => setContentValue(event.target.value)
 
     return (
-        <AccordionItemBase name="Add Description">
+        <AccordionItemBase name="설명 추가">
             <Input
                 value={contentValue}
                 onChange={handleContentChange}
@@ -167,7 +167,7 @@ const ImageAccordion = ({ builder }: { builder: PatchNoteBuilder }) => {
     const [srcValue, setSrcValue] = React.useState('')
     const handleSrcChange = (event: React.ChangeEvent<HTMLInputElement>) => setSrcValue(event.target.value)
     return (
-        <AccordionItemBase name="Add Image">
+        <AccordionItemBase name="이미지 추가">
             <Input
                 placeholder='alt'
                 value={altValue}
@@ -192,7 +192,7 @@ const BlockcontentAccordion = ({ builder }: { builder: PatchNoteBuilder }) => {
     const handleContentChange = (event: React.ChangeEvent<HTMLInputElement>) => setContentValue(event.target.value)
 
     return (
-        <AccordionItemBase name="Add Blockcontent">
+        <AccordionItemBase name="인용문 추가">
             <Input
                 value={contentValue}
                 onChange={handleContentChange}
@@ -223,7 +223,7 @@ const TableAccordion = ({ builder }: { builder: PatchNoteBuilder }) => {
     const [key, setKey] = React.useState<number>(0)
     const inputs = React.useRef<HTMLInputElement[]>([]);
     return (
-        <AccordionItemBase name="Add Table">
+        <AccordionItemBase name="테이블 추가">
             {itemElements}
             <Button marginRight="100px" onClick={() => builder.addTable(inputs.current.map(input => input.value))}>
                 Add
@@ -239,7 +239,7 @@ const TableAccordion = ({ builder }: { builder: PatchNoteBuilder }) => {
 
 const FinalAccordion = ({ builder }: { builder: PatchNoteBuilder }) => {
     return (
-        <AccordionItemBase name="Add Final">
+        <AccordionItemBase name="패치노트 마무리">
             <Button onClick={() => builder.addFinal()}>
                 Add
             </Button>
