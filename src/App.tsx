@@ -48,7 +48,7 @@ function App() {
     new Proxy(new PatchNoteBuilder(setElements, webhookMedadataBuilder), {
       get: (target: PatchNoteBuilder, prop: string | symbol) => {
         if (target.isFinalized && 
-           prop !== "isFinalized &&
+           prop !== "isFinalized" &&
            prop !== "addFinal"
         ) {
           toast({
