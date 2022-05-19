@@ -1,4 +1,4 @@
-import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Button, Input } from '@chakra-ui/react';
+import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Button, Flex, Input, Select } from '@chakra-ui/react';
 import * as React from 'react';
 import { PatchNoteBuilder } from './PatchNoteBuilder';
 
@@ -54,7 +54,7 @@ const MetadataAccordion = ({ builder }: { builder: PatchNoteBuilder }) => {
     const handleContentChange = (event: React.ChangeEvent<HTMLInputElement>) => setContentValue(event.target.value)
 
     return (
-        <AccordionItemBase name="메타데이터 추가 (제일 먼저 추가해야함)">
+        <AccordionItemBase name="메타데이터 추가">
             <Input
                 value={contentValue}
                 onChange={handleContentChange}
@@ -113,18 +113,18 @@ const CategoryAccordion = ({ builder }: { builder: PatchNoteBuilder }) => {
 
 const ContentAccordion = ({ builder }: { builder: PatchNoteBuilder }) => {
     const [typeValue, setTypeValue] = React.useState('')
-    const handleTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => setTypeValue(event.target.value)
+    const handleTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => setTypeValue(event.target.value)
     const [colorValue, setColorValue] = React.useState('')
     const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => setColorValue(event.target.value)
     const [contentValue, setContentValue] = React.useState('')
     const handleContentChange = (event: React.ChangeEvent<HTMLInputElement>) => setContentValue(event.target.value)
     return (
         <AccordionItemBase name="내용 추가">
-            <Input
-                placeholder='type: plus | minus | check'
-                value={typeValue}
-                onChange={handleTypeChange}
-            />
+            <Select id='type' placeholder='타입을 선택해주세요' onChange={handleTypeChange}>
+                <option>plus</option>
+                <option>minus</option>
+                <option>check</option>
+            </Select>
             <Input
                 placeholder='color'
                 value={colorValue}
@@ -209,7 +209,10 @@ const Item = ({ inputsRef, refKey }: { inputsRef: React.MutableRefObject<Array<H
     const handleContentChange = (event: React.ChangeEvent<HTMLInputElement>) => { setContentValue(event.target.value) }
     return (
         <Input
-            ref={(element) => inputsRef.current[refKey] = element}
+            ref={(element) => {
+                if (element)
+                    inputsRef.current[refKey] = element
+            }}
             marginBottom="20px"
             value={contentValue}
             onChange={handleContentChange}
@@ -222,17 +225,28 @@ const TableAccordion = ({ builder }: { builder: PatchNoteBuilder }) => {
     const [itemElements, setItemElements] = React.useState<JSX.Element[]>([])
     const [key, setKey] = React.useState<number>(0)
     const inputs = React.useRef<HTMLInputElement[]>([]);
+
     return (
         <AccordionItemBase name="테이블 추가">
             {itemElements}
-            <Button marginRight="100px" onClick={() => builder.addTable(inputs.current.map(input => input.value))}>
-                Add
-            </Button>
-            <Button onClick={() => setItemElements(itemElements => {
-                setKey(key + 1)
-                return [...itemElements, <Item key={key} inputsRef={inputs} refKey={key} />]
-            })}>+</Button>
-            <Button onClick={() => setItemElements(elements => elements.slice(0, -1))}>-</Button>
+            <Flex justifyContent="space-between">
+                <Button onClick={() => {
+                    builder.addTable(inputs.current.map(input => input.value))
+                }}>
+                    Add
+                </Button>
+                <Flex>
+                    <Button onClick={() => {
+                        setKey(key + 1)
+                        setItemElements(itemElements => [...itemElements, <Item key={key} inputsRef={inputs} refKey={key} />])
+                    }}>+</Button>
+                    <Button onClick={() => {
+                        setKey(key - 1)
+                        setItemElements(itemElements => itemElements.slice(0, -1))
+                        inputs.current.pop()
+                    }}>-</Button>
+                </Flex>
+            </Flex>
         </AccordionItemBase>
     )
 }

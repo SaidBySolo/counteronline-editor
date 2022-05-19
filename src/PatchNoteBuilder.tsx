@@ -1,5 +1,10 @@
 import { WebhookMetadataBuilder } from "./WebhookMetadataBuilder";
 
+interface process {
+    func: (...args: string[]) => void
+    args: string[]
+}
+
 // https://stackoverflow.com/a/3890175
 function linkify(inputText: string) {
     //URLs starting with http://, https://, or ftp://
@@ -9,17 +14,31 @@ function linkify(inputText: string) {
 }
 
 export class PatchNoteBuilder {
+    setElements: React.Dispatch<React.SetStateAction<JSX.Element[]>>
     addElement: (element: JSX.Element) => void
-    state: React.Dispatch<React.SetStateAction<JSX.Element[]>>
     webhookMedadataBuilder: WebhookMetadataBuilder;
-    constructor(state: React.Dispatch<React.SetStateAction<JSX.Element[]>>, webhookMedadataBuilder: WebhookMetadataBuilder) {
-        this.state = state
+    webhookMetadataBuilderProcess: process[];
+    isSetMetadata: boolean;
+    isFinalized: boolean;
+    constructor(
+        setElements: React.Dispatch<React.SetStateAction<JSX.Element[]>>,
+        webhookMedadataBuilder: WebhookMetadataBuilder,
+    ) {
+        this.setElements = setElements
+        this.addElement = (element: JSX.Element) => setElements(prevElements => [...prevElements, element])
         this.webhookMedadataBuilder = webhookMedadataBuilder
-        this.addElement = (element: JSX.Element) => state(prevElements => [...prevElements, element])
+        this.webhookMetadataBuilderProcess = []
+        this.isSetMetadata = false
+        this.isFinalized = false
+
     }
 
     addMetadata(content: string) {
-        this.webhookMedadataBuilder.addMetadata(content)
+        this.isSetMetadata = true
+        this.webhookMetadataBuilderProcess.push({
+            func: this.webhookMedadataBuilder.addMetadata,
+            args: [content]
+        })
         this.addElement(
             <>
                 <meta property="og:description" content={`이 게시글은 CounterOnline changelog ${content} 패치에 관한 내용을 다루고 있습니다.`} />
@@ -34,7 +53,10 @@ export class PatchNoteBuilder {
     }
 
     addTitle(content: string, version: string) {
-        this.webhookMedadataBuilder.setTitle(content, version)
+        this.webhookMetadataBuilderProcess.push({
+            func: this.webhookMedadataBuilder.setTitle,
+            args: [content, version]
+        })
         this.addElement(
             <>
                 <p>
@@ -61,12 +83,18 @@ export class PatchNoteBuilder {
     }
 
     addCategory(content: string) {
-        this.webhookMedadataBuilder.setCategory(content)
+        this.webhookMetadataBuilderProcess.push({
+            func: this.webhookMedadataBuilder.setCategory,
+            args: [content]
+        })
         this.addElement(<h5 style={{ fontWeight: 800, fontSize: "22px" }}>&nbsp; &nbsp; {content}</h5>)
     }
 
     addContent(type: string, color: string, content: string) {
-        this.webhookMedadataBuilder.setContent()
+        this.webhookMetadataBuilderProcess.push({
+            func: this.webhookMedadataBuilder.setContent,
+            args: [type, color, content]
+        })
         this.addElement(
             < p >
                 <span style={{ fontSize: "16px", color: color }} >
@@ -99,7 +127,6 @@ export class PatchNoteBuilder {
     }
 
     addTable(content: string[]) {
-        console.log(content)
         this.addElement(
             <ul>
                 {content.map((content) => <li><span style={{ fontSize: "15px" }}>{content.replaceAll("->", '&rarr;').replace(/~~(.+?)~~/m, '<s>$1</s>')}</span></li>)}
@@ -120,8 +147,16 @@ export class PatchNoteBuilder {
         )
     }
     addFinal() {
-        this.webhookMedadataBuilder.setFinal()
-        this.state(elements => [<meta property="co:webhook" content={JSON.stringify(this.webhookMedadataBuilder.webhookData)} />, ...elements])
+        this.webhookMetadataBuilderProcess.push({
+            func: this.webhookMedadataBuilder.setFinal,
+            args: []
+        })
+        this.webhookMetadataBuilderProcess.forEach(process => {
+            process.func.bind(this.webhookMedadataBuilder)(...process.args)
+        }
+        )
+        this.isFinalized = true
+        this.setElements(elements => [<meta property="co:webhook" content={JSON.stringify(this.webhookMedadataBuilder.webhookData)} />, ...elements])
         this.addElement(
             <>
                 <p>&nbsp;</p>
