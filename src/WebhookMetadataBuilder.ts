@@ -25,7 +25,13 @@ export class WebhookMetadataBuilder {
             process: 0,
             srl: srl
         })
-        console.log(this.webhookData)
+    }
+
+    clear() {
+        this.size = 0
+        this.webhookData = []
+        this.processData = {}
+        this.category = ""
     }
 
     reset() {
@@ -38,7 +44,6 @@ export class WebhookMetadataBuilder {
         if (this.processData?.name) {
             this.setCategory("")
             this.webhookData.push(this.processData)
-            console.log(this.webhookData)
             this.reset()
         }
 
@@ -70,6 +75,5 @@ export class WebhookMetadataBuilder {
     setFinal() {
         this.setCategory("")
         this.webhookData.push(this.processData)
-        console.log(this.webhookData)
     }
 }
