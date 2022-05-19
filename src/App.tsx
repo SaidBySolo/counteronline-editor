@@ -47,7 +47,10 @@ function App() {
   const [builder] = React.useState<PatchNoteBuilder>(
     new Proxy(new PatchNoteBuilder(setElements, webhookMedadataBuilder), {
       get: (target: PatchNoteBuilder, prop: string | symbol) => {
-        if (target.isFinalized){
+        if (target.isFinalized && 
+           prop !== "isFinalized &&
+           prop !== "addFinal"
+        ) {
           toast({
             title: '패치노트가 마무리 되었어요.',
             description: "패치노트가 마무리된 이후에는 내용을 추가할수없어요.",
