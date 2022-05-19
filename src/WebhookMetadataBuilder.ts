@@ -40,7 +40,7 @@ export class WebhookMetadataBuilder {
         this.processData = {}
     }
 
-    setTitle(name: string, version: string) {
+    setTitle(name: string, version: string = "") {
         if (this.processData?.name) {
             this.setCategory("")
             this.webhookData.push(this.processData)

@@ -47,6 +47,15 @@ function App() {
   const [builder] = React.useState<PatchNoteBuilder>(
     new Proxy(new PatchNoteBuilder(setElements, webhookMedadataBuilder), {
       get: (target: PatchNoteBuilder, prop: string | symbol) => {
+        if (target.isSetMetadata && prop === "addMetadata") {
+          toast({
+            title: '이미 메타데이터가 추가되어있어요.',
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+          })
+          return
+        }
         if (!target.isSetMetadata &&
           prop !== "addMetadata" &&
           prop !== "webhookMetadataBuilderProcess" &&
@@ -55,7 +64,7 @@ function App() {
         ) {
           console.log(prop)
           toast({
-            title: '메타 데이터를 먼저 추가해야해요!',
+            title: '메타데이터를 먼저 추가해야해요!',
             description: "맨 상단에 메타 데이터 추가를 열고 작성후 추가해주세요.",
             status: 'error',
             duration: 9000,
@@ -116,6 +125,7 @@ function App() {
             <Button onClick={() => {
               setElements([])
               webhookMedadataBuilder.clear()
+              builder.webhookMetadataBuilderProcess = []
               builder.isFinalized = false
               builder.isSetMetadata = false
             }}>

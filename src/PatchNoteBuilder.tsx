@@ -129,7 +129,13 @@ export class PatchNoteBuilder {
     addTable(content: string[]) {
         this.addElement(
             <ul>
-                {content.map((content) => <li><span style={{ fontSize: "15px" }}>{content.replaceAll("->", '&rarr;').replace(/~~(.+?)~~/m, '<s>$1</s>')}</span></li>)}
+                {
+                    content.map((content) =>
+                        <li>
+                            <span dangerouslySetInnerHTML={{ __html: content.replaceAll("->", '&rarr;').replace(/~~(.+?)~~/m, '<s>$1</s>') }} style={{ fontSize: "15px" }} />
+                        </li>
+                    )
+                }
             </ul>
 
         )
