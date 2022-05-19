@@ -15,24 +15,26 @@ function linkify(inputText: string) {
 
 export class PatchNoteBuilder {
     setElements: React.Dispatch<React.SetStateAction<JSX.Element[]>>
-    setIsFinalized: React.Dispatch<React.SetStateAction<boolean>>;
     addElement: (element: JSX.Element) => void
     webhookMedadataBuilder: WebhookMetadataBuilder;
     webhookMetadataBuilderProcess: process[];
+    isSetMetadata: boolean;
+    isFinalized: boolean;
     constructor(
         setElements: React.Dispatch<React.SetStateAction<JSX.Element[]>>,
-        setIsFinalized: React.Dispatch<React.SetStateAction<boolean>>,
         webhookMedadataBuilder: WebhookMetadataBuilder,
     ) {
         this.setElements = setElements
-        this.setIsFinalized = setIsFinalized
         this.addElement = (element: JSX.Element) => setElements(prevElements => [...prevElements, element])
         this.webhookMedadataBuilder = webhookMedadataBuilder
         this.webhookMetadataBuilderProcess = []
+        this.isSetMetadata = false
+        this.isFinalized = false
 
     }
 
     addMetadata(content: string) {
+        this.isSetMetadata = true
         this.webhookMetadataBuilderProcess.push({
             func: this.webhookMedadataBuilder.addMetadata,
             args: [content]
@@ -153,7 +155,7 @@ export class PatchNoteBuilder {
             process.func.bind(this.webhookMedadataBuilder)(...process.args)
         }
         )
-        this.setIsFinalized(true)
+        this.isFinalized = true
         this.setElements(elements => [<meta property="co:webhook" content={JSON.stringify(this.webhookMedadataBuilder.webhookData)} />, ...elements])
         this.addElement(
             <>
