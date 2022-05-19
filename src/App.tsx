@@ -47,6 +47,15 @@ function App() {
   const [builder] = React.useState<PatchNoteBuilder>(
     new Proxy(new PatchNoteBuilder(setElements, webhookMedadataBuilder), {
       get: (target: PatchNoteBuilder, prop: string | symbol) => {
+        if (target.isFinalized){
+          toast({
+            title: '패치노트가 마무리 되었어요.',
+            description: "패치노트가 마무리된 이후에는 내용을 추가할수없어요.",
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+          })
+          return () => { }
         if (target.isSetMetadata && prop === "addMetadata") {
           toast({
             title: '이미 메타데이터가 추가되어 있어요.',
@@ -54,7 +63,7 @@ function App() {
             duration: 9000,
             isClosable: true,
           })
-          return
+          return () => { }
         }
         if (!target.isSetMetadata &&
           prop !== "addMetadata" &&
