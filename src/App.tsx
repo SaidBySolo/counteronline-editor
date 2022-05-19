@@ -56,6 +56,7 @@ function App() {
             isClosable: true,
           })
           return () => { }
+        }
         if (target.isSetMetadata && prop === "addMetadata") {
           toast({
             title: '이미 메타데이터가 추가되어 있어요.',
