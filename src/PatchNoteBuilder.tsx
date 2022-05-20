@@ -87,7 +87,7 @@ export class PatchNoteBuilder {
             func: this.webhookMedadataBuilder.setCategory,
             args: [content]
         })
-        this.addElement(<h5 dangerouslySetInnerHTML={{ __html: `&nbsp; &nbsp; ${content}` }} style={{ fontWeight: 800, fontSize: "22px" }} />)
+        this.addElement(<h5 dangerouslySetInnerHTML={{ __html: `&nbsp; &nbsp; ${parseMarkdown(content)}` }} style={{ fontWeight: 800, fontSize: "22px" }} />)
     }
 
     addContent(type: string, color: string, content: string) {
