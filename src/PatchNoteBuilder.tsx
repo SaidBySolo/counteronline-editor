@@ -5,12 +5,12 @@ interface process {
     args: string[]
 }
 
-// https://stackoverflow.com/a/3890175
-function linkify(inputText: string) {
-    //URLs starting with http://, https://, or ftp://
-    const replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#%?=~_|!:,.;/]*[-A-Z0-9+&@#%=~_|/])/gim;
-    const execed = replacePattern1.exec(inputText)
-    return execed ? <a href={execed[0]}>{execed[0]}</a> : inputText
+function parseMarkdown(inputText: string) {
+    return inputText
+        // https://davidwells.io/snippets/regex-match-markdown-links
+        .replaceAll(/\[([\w\s\d]+)\]\(((?:\/|https?:\/\/)[\w\d./?=#]+)\)/gm, "<a href=$2>$1</a>")
+        .replaceAll(/~~(.+?)~~/gm, '<s>$1</s>')
+        .replaceAll(/``(.+?)``/gm, '<code>$1</code>')
 }
 
 export class PatchNoteBuilder {
@@ -87,7 +87,7 @@ export class PatchNoteBuilder {
             func: this.webhookMedadataBuilder.setCategory,
             args: [content]
         })
-        this.addElement(<h5 style={{ fontWeight: 800, fontSize: "22px" }}>&nbsp; &nbsp; {content}</h5>)
+        this.addElement(<h5 dangerouslySetInnerHTML={{ __html: `&nbsp; &nbsp; ${parseMarkdown(content)}` }} style={{ fontWeight: 800, fontSize: "22px" }} />)
     }
 
     addContent(type: string, color: string, content: string) {
@@ -97,22 +97,26 @@ export class PatchNoteBuilder {
         })
         this.addElement(
             < p >
-                <span style={{ fontSize: "16px", color: color }} >
-                    {/* @ts-ignore*/}
-                    <span class={`fas fa-${type}`}>
-                        &nbsp;
-                    </span>
-                    &nbsp; {content}
-                </span>
-            </p >
+                <span
+                    dangerouslySetInnerHTML={{
+                        __html:
+                            `
+                            <span class="fas fa-${type}">
+                                &nbsp;
+                            </span>
+                            &nbsp; ${parseMarkdown(content)}
+                            `
+                    }}
+                    style={{ fontSize: "16px", color: color }}
+                />
+            </p>
         )
     }
 
     addDescription(content: string) {
         this.addElement(
             <p>
-                <span style={{ fontSize: "13px" }}>
-                    &nbsp; &nbsp; &nbsp; &nbsp; {linkify(content)}
+                <span dangerouslySetInnerHTML={{ __html: `&nbsp; &nbsp; &nbsp; &nbsp; ${parseMarkdown(content)}` }} style={{ fontSize: "13px" }}>
                 </span>
             </p>
         )
@@ -132,7 +136,7 @@ export class PatchNoteBuilder {
                 {
                     content.map((content) =>
                         <li>
-                            <span dangerouslySetInnerHTML={{ __html: content.replaceAll("->", '&rarr;').replace(/~~(.+?)~~/m, '<s>$1</s>') }} style={{ fontSize: "15px" }} />
+                            <span dangerouslySetInnerHTML={{ __html: parseMarkdown(content) }} style={{ fontSize: "15px" }} />
                         </li>
                     )
                 }
@@ -145,9 +149,7 @@ export class PatchNoteBuilder {
         this.addElement(
             <blockquote>
                 <p>
-                    <span style={{ fontSize: "16px" }}>
-                        {content}
-                    </span>
+                    <span dangerouslySetInnerHTML={{ __html: parseMarkdown(content) }} style={{ fontSize: "16px" }} />
                 </p>
             </blockquote>
         )
