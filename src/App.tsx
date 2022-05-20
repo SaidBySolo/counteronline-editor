@@ -47,10 +47,16 @@ function App() {
   const [builder] = React.useState<PatchNoteBuilder>(
     new Proxy(new PatchNoteBuilder(setElements, webhookMedadataBuilder), {
       get: (target: PatchNoteBuilder, prop: string | symbol) => {
-        if (target.isFinalized && 
-           prop !== "isFinalized" &&
-           prop !== "addFinal"
+        if (target.isFinalized && ![
+          "addElement",
+          "webhookMedadataBuilder",
+          "webhookMetadataBuilderProcess",
+          "setElements",
+          "isFinalized"
+        ].includes(prop.toString())
         ) {
+          if (prop === "isFinalized")
+            return true
           toast({
             title: '패치노트가 마무리 되었어요.',
             description: "패치노트가 마무리된 이후에는 내용을 추가할수없어요.",
@@ -58,6 +64,7 @@ function App() {
             duration: 9000,
             isClosable: true,
           })
+          console.log(prop)
           return () => { }
         }
         if (target.isSetMetadata && prop === "addMetadata") {
@@ -69,13 +76,13 @@ function App() {
           })
           return () => { }
         }
-        if (!target.isSetMetadata &&
-          prop !== "addMetadata" &&
-          prop !== "webhookMetadataBuilderProcess" &&
-          prop !== "isSetMetadata" &&
-          prop !== "isFinalized"
+        if (!target.isSetMetadata && ![
+          "addMetadata",
+          "webhookMetadataBuilderProcess",
+          "isSetMetadata",
+          "isFinalized",
+        ].includes(prop.toString())
         ) {
-          console.log(prop)
           toast({
             title: '메타데이터를 먼저 추가해야해요!',
             description: "맨 상단에 메타데이터 추가를 열고 작성후 추가해주세요.",
@@ -98,60 +105,60 @@ function App() {
   }, [elements])
 
   return (
-    <>
-      <Flex>
-        <Flex flexDirection="column">
-          <MainAccordion builder={builder} />
-          <Flex justifyContent="space-between" margin="25px">
-            <Button onClick={() => {
-              if (builder.isFinalized) {
-                toast({
-                  title: '복사되었어요!',
-                  status: 'success',
-                  duration: 9000,
-                  isClosable: true,
-                })
-                return onCopy()
-              }
+    <Flex>
+      <Flex flexDirection="column">
+        <MainAccordion builder={builder} />
+        <Flex justifyContent="space-between" margin="25px">
+          <Button onClick={() => {
+            if (builder.isFinalized) {
               toast({
-                title: '패치노트를 마무리해야해요!',
-                description: "맨 하단에 패치노트 마무리 항목을 누르고 추가해주세요.",
-                status: 'error',
+                title: '복사되었어요!',
+                status: 'success',
                 duration: 9000,
                 isClosable: true,
               })
-            }}>
-              {hasCopied ? "복사됨" : "복사"}
-            </Button>
-            <Button onClick={() => {
-              setElements(elements => elements.slice(0, -1))
-              builder.webhookMetadataBuilderProcess.pop()
-              if (builder.webhookMetadataBuilderProcess.length === 0) {
-                builder.isSetMetadata = false
-              }
-              if (builder.isFinalized) {
-                builder.isFinalized = false
-              }
-            }}>
-              되돌리기
-            </Button>
-            <Button onClick={() => {
-              setElements([])
-              webhookMedadataBuilder.clear()
-              builder.webhookMetadataBuilderProcess = []
-              builder.isFinalized = false
+              return onCopy()
+            }
+            toast({
+              title: '패치노트를 마무리해야해요!',
+              description: "맨 하단에 패치노트 마무리 항목을 누르고 추가해주세요.",
+              status: 'error',
+              duration: 9000,
+              isClosable: true,
+            })
+          }}>
+            {hasCopied ? "복사됨" : "복사"}
+          </Button>
+          <Button onClick={() => {
+            setElements(elements => elements.slice(0, -1))
+            builder.webhookMetadataBuilderProcess.pop()
+            if (builder.webhookMetadataBuilderProcess.length === 0) {
               builder.isSetMetadata = false
-            }}>
-              전체 지우기
-            </Button>
-          </Flex>
+            }
+            if (builder.isFinalized) {
+              setElements(elements => elements.slice(1))
+              webhookMedadataBuilder.clear()
+              builder.isFinalized = false
+            }
+          }}>
+            되돌리기
+          </Button>
+          <Button onClick={() => {
+            setElements([])
+            webhookMedadataBuilder.clear()
+            builder.webhookMetadataBuilderProcess = []
+            builder.isFinalized = false
+            builder.isSetMetadata = false
+          }}>
+            전체 지우기
+          </Button>
         </Flex>
-        <Center height='100vh'>
-          <Divider orientation='vertical' />
-        </Center>
-        {renderer}
       </Flex>
-    </>
+      <Center height='100vh'>
+        <Divider orientation='vertical' />
+      </Center>
+      {renderer}
+    </Flex>
   );
 }
 
