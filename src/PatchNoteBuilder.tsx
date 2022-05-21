@@ -98,15 +98,7 @@ export class PatchNoteBuilder {
         this.addElement(
             < p >
                 <span
-                    dangerouslySetInnerHTML={{
-                        __html:
-                            `
-                            <span class="fas fa-${type}">
-                                &nbsp;
-                            </span>
-                            &nbsp; ${parseMarkdown(content)}
-                            `
-                    }}
+                    dangerouslySetInnerHTML={{__html: `<span class="fas fa-${type}">&nbsp;</span>&nbsp;${parseMarkdown(content)}`}}
                     style={{ fontSize: "16px", color: color }}
                 />
             </p>
@@ -116,7 +108,7 @@ export class PatchNoteBuilder {
     addDescription(content: string) {
         this.addElement(
             <p>
-                <span dangerouslySetInnerHTML={{ __html: `&nbsp; &nbsp; &nbsp; &nbsp; ${parseMarkdown(content)}` }} style={{ fontSize: "13px" }}>
+                <span dangerouslySetInnerHTML={{ __html: `&nbsp; &nbsp; &nbsp; &nbsp; ${parseMarkdown(content)}` }} style={{ fontSize: "13px", color: "#999999" }}>
                 </span>
             </p>
         )
