@@ -108,7 +108,7 @@ export class PatchNoteBuilder {
     addDescription(content: string) {
         this.addElement(
             <p>
-                <span dangerouslySetInnerHTML={{ __html: `&nbsp; &nbsp; &nbsp; &nbsp; ${parseMarkdown(content)}` }} style={{ fontSize: "13px", color: "#999999" }}>
+                <span dangerouslySetInnerHTML={{ __html: `&nbsp; &nbsp; &nbsp; &nbsp;${parseMarkdown(content)}` }} style={{ fontSize: "13px", color: "#999999" }}>
                 </span>
             </p>
         )
