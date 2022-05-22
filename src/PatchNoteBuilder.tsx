@@ -33,12 +33,20 @@ export class PatchNoteBuilder {
 
     }
 
+    private __push_dummy_process() {
+        this.__push_process(() => { }, [])
+    }
+
+    private __push_process(func: (...args: string[]) => void, args: string[]) {
+        this.webhookMetadataBuilderProcess.push({
+            func: func,
+            args: args
+        })
+    }
+
     addMetadata(content: string) {
         this.isSetMetadata = true
-        this.webhookMetadataBuilderProcess.push({
-            func: this.webhookMedadataBuilder.addMetadata,
-            args: [content]
-        })
+        this.__push_process(this.webhookMedadataBuilder.addMetadata, [content])
         this.addElement(
             <>
                 <meta property="og:description" content={`이 게시글은 CounterOnline changelog ${content} 패치에 관한 내용을 다루고 있습니다.`} />
@@ -49,14 +57,12 @@ export class PatchNoteBuilder {
     }
 
     addLineBreak() {
+        this.__push_dummy_process()
         this.addElement(<p>&nbsp;</p>)
     }
 
     addTitle(content: string, version: string) {
-        this.webhookMetadataBuilderProcess.push({
-            func: this.webhookMedadataBuilder.setTitle,
-            args: [content, version]
-        })
+        this.__push_process(this.webhookMedadataBuilder.setTitle, [content, version])
         this.addElement(
             <>
                 <p>
@@ -74,7 +80,7 @@ export class PatchNoteBuilder {
                                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                                 {/* @ts-ignore*/}
                             </strike>
-                        </strong>
+                        </strong>s
                     </span>
                 </h5>
             </>
@@ -83,22 +89,16 @@ export class PatchNoteBuilder {
     }
 
     addCategory(content: string) {
-        this.webhookMetadataBuilderProcess.push({
-            func: this.webhookMedadataBuilder.setCategory,
-            args: [content]
-        })
+        this.__push_process(this.webhookMedadataBuilder.setCategory, [content])
         this.addElement(<h5 dangerouslySetInnerHTML={{ __html: `&nbsp; &nbsp; ${parseMarkdown(content)}` }} style={{ fontWeight: 800, fontSize: "22px" }} />)
     }
 
     addContent(type: string, color: string, content: string) {
-        this.webhookMetadataBuilderProcess.push({
-            func: this.webhookMedadataBuilder.setContent,
-            args: [type, color, content]
-        })
+        this.__push_process(this.webhookMedadataBuilder.setContent, [type, color, content])
         this.addElement(
             < p >
                 <span
-                    dangerouslySetInnerHTML={{__html: `<span class="fas fa-${type}">&nbsp;</span>&nbsp;${parseMarkdown(content)}`}}
+                    dangerouslySetInnerHTML={{ __html: `<span class="fas fa-${type}">&nbsp;</span>&nbsp;${parseMarkdown(content)}` }}
                     style={{ fontSize: "16px", color: color }}
                 />
             </p>
@@ -106,6 +106,7 @@ export class PatchNoteBuilder {
     }
 
     addDescription(content: string) {
+        this.__push_dummy_process()
         this.addElement(
             <p>
                 <span dangerouslySetInnerHTML={{ __html: `&nbsp; &nbsp; &nbsp; &nbsp;${parseMarkdown(content)}` }} style={{ fontSize: "13px", color: "#999999" }}>
@@ -115,6 +116,7 @@ export class PatchNoteBuilder {
     }
 
     addImage(alt: string, src: string) {
+        this.__push_dummy_process()
         this.addElement(
             < p >
                 <img alt={alt} src={src} style={{ marginTop: "3px", borderRadius: "15px" }} width="70%" />
@@ -123,6 +125,7 @@ export class PatchNoteBuilder {
     }
 
     addTable(content: string[]) {
+        this.__push_dummy_process()
         this.addElement(
             <ul>
                 {
@@ -138,6 +141,7 @@ export class PatchNoteBuilder {
     }
 
     addBlockcontent(content: string) {
+        this.__push_dummy_process()
         this.addElement(
             <blockquote>
                 <p>
@@ -147,10 +151,7 @@ export class PatchNoteBuilder {
         )
     }
     addFinal() {
-        this.webhookMetadataBuilderProcess.push({
-            func: this.webhookMedadataBuilder.setFinal,
-            args: []
-        })
+        this.__push_process(this.webhookMedadataBuilder.setFinal, [])
         this.webhookMetadataBuilderProcess.forEach(process => {
             process.func.bind(this.webhookMedadataBuilder)(...process.args)
         }

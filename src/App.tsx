@@ -1,6 +1,6 @@
 import { Center, Divider, Flex, Button, useClipboard, useToast } from '@chakra-ui/react';
 import * as React from 'react';
-import { MainAccordion } from './Builder';
+import { MainAccordion } from './BuilderUI';
 import { PatchNoteBuilder } from './PatchNoteBuilder';
 import { Renderer } from './Renderer';
 import ReactDOMServer from 'react-dom/server'
