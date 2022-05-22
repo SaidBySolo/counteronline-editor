@@ -1,6 +1,6 @@
 {
   "name": "counteronline-editor",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "dependencies": {
     "@chakra-ui/react": "^2.0.0",
     "@emotion/react": "^11",
